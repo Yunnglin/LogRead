@@ -18,3 +18,47 @@ log:
     - 退出并关闭操作系统
 
 parameter:
+  ocr_config:
+    show_img: false
+    para: --psm 6 # -c tessedit_char_whitelist=0123456789
+
+  bg_color: # 颜色相关的RGB值
+    - 2
+    - 117
+    - 124
+
+  border_color:
+    - 100
+    - 100
+    - 100
+
+  box_size: # 大小相关的px值，宽，高
+    - 38
+    - 15
+
+  v_box_size:
+    - 38
+    - 36
+
+  offset_x: 60
+  offset_y: 22
+
+  full_screen: # 屏幕尺寸
+    - 0
+    - 0
+    - 1366
+    - 768
+
+  up_start_pos1:
+    - 499
+    - 266
+  up_start_pos2:
+    - 499
+    - 287
+
+  down_start_pos1:
+    - 499
+    - 401
+  down_start_pos2:
+    - 499
+    - 422
