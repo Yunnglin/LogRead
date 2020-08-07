@@ -1,0 +1,20 @@
+base: D:\HLH524 #文件根目录
+
+log:
+  path: logfile
+
+  valid_time: 1 # one month
+
+  encode: gbk
+
+  filter: true # 是否对字段进行筛选
+
+  fields:
+    - 开机时间
+    - 加热中...
+    - 恒温
+    - 关闭加热
+    - 开始降温...
+    - 退出并关闭操作系统
+
+parameter:
