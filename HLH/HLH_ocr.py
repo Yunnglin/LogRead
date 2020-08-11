@@ -1,13 +1,17 @@
 import json
 import collections
+import logging
 
 import pytesseract
-from PIL import Image, ImageGrab
-import threading
+from PIL import ImageGrab
 
 from Utils.config_util import load_config
 
-tree = lambda : collections.defaultdict(tree)
+
+# tree = lambda: collections.defaultdict(tree)
+def tree():
+    return collections.defaultdict(tree)
+
 
 class ParameterOCR:
 
@@ -19,6 +23,7 @@ class ParameterOCR:
         # 4行8列的参数数组
         self._row = 4
         self._col = 8
+        # 下面是一些需要提取的参数
         self.parameter = [[0 for i in range(self._col)] for j in range(self._row)]
         self.parameter_dict = tree()
         self.cool = [0, 0]
@@ -213,7 +218,7 @@ class ParameterOCR:
         try:
             para_str = para.__next__()
             self.frequency = para_str.strip().split('\n')
-            if len(self.frequency) != 1:
+            if len(self.frequency) != 1 or self.frequency[0] == "":
                 self.frequency = 0
             else:
                 self.frequency = self.frequency[0]
@@ -225,44 +230,47 @@ class ParameterOCR:
         进行ocr识别
         :param precise: 是否精确
         """
-        if precise:
-            self.__precise_identify()
-        else:
-            self.__rough_identify()
+        try:
+            if precise:
+                self.__precise_identify()
+            else:
+                self.__rough_identify()
 
-        for i in range(self._row):
-            for j in range(self._col):
-                if i == 0:
-                    self.parameter_dict[str(self._col - j) + 'T']['PV'] = self.parameter[i][j]
-                elif i == 1:
-                    self.parameter_dict[str(self._col - j) + 'T']['SV'] = self.parameter[i][j]
-                elif i == 2:
-                    self.parameter_dict[str(self._col - j) + 'B']['PV'] = self.parameter[i][j]
-                elif i == 3:
-                    self.parameter_dict[str(self._col - j) + 'B']['SV'] = self.parameter[i][j]
+            for i in range(self._row):
+                for j in range(self._col):
+                    if i == 0:
+                        self.parameter_dict[str(self._col - j) + 'T']['PV'] = self.parameter[i][j]
+                    elif i == 1:
+                        self.parameter_dict[str(self._col - j) + 'T']['SV'] = self.parameter[i][j]
+                    elif i == 2:
+                        self.parameter_dict[str(self._col - j) + 'B']['PV'] = self.parameter[i][j]
+                    elif i == 3:
+                        self.parameter_dict[str(self._col - j) + 'B']['SV'] = self.parameter[i][j]
 
-        self.__identify_cool()
-        self.cool_dict = {
-            'PV': self.cool[0],
-            'SV': self.cool[1]
-        }
-        self.__identify_pcb()
-        self.pcb_dict = {
-            '入板': self.pcb_statistic[0],
-            '出板': self.pcb_statistic[1],
-            '炉内PCB': self.pcb_statistic[2]
-        }
-        self.__identify_trans_speed()
-        self.trans_speed_dict = {
-            'PV': self.trans_speed[0],
-            'SV': self.trans_speed[1]
-        }
-        self.__identify_frequency()
-        self.frequency_dict = {
-            '通道1': self.frequency
-        }
+            self.__identify_cool()
+            self.cool_dict = {
+                'PV': self.cool[0],
+                'SV': self.cool[1]
+            }
+            self.__identify_pcb()
+            self.pcb_dict = {
+                'in': self.pcb_statistic[0],  # 入板
+                'out': self.pcb_statistic[1],  # 出板
+                'in_pcb': self.pcb_statistic[2]  # 炉内PCB
+            }
+            self.__identify_trans_speed()
+            self.trans_speed_dict = {
+                'PV': self.trans_speed[0],
+                'SV': self.trans_speed[1]
+            }
+            self.__identify_frequency()
+            self.frequency_dict = {
+                'channel1': self.frequency  # 通道1
+            }
+        except Exception:
+            logging.exception("something is wrong in identify image")
 
-    def dump_json(self) -> str:
+    def dump_json(self, indent=None) -> str:
         """
         将获取到的参数转为json
         :return: json字符串
@@ -271,7 +279,16 @@ class ParameterOCR:
             'cool': self.cool_dict,
             'parameter': self.parameter_dict,
             'pcb_statistic': self.pcb_dict,
-            'trans_speed': self.trans_speed_dict,
-            'frequency': self.frequency_dict
+            'trans_speed': self.trans_speed_dict,  # 运输速度
+            'frequency': self.frequency_dict  # 频率
         }
-        return json.dumps(param, ensure_ascii=False, indent=2)
+        return json.dumps(param, ensure_ascii=False, indent=indent)
+
+    def dump_dict(self) -> dict:
+        return {
+            'cool': self.cool_dict,
+            'parameter': self.parameter_dict,
+            'pcb_statistic': self.pcb_dict,
+            'trans_speed': self.trans_speed_dict,  # 运输速度
+            'frequency': self.frequency_dict  # 频率
+        }

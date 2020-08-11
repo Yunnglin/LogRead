@@ -20,7 +20,7 @@ log:
 parameter:
   ocr_config:
     show_img: false
-    para: --psm 6 # -c tessedit_char_whitelist=0123456789
+    para: --psm 6 -c tessedit_char_whitelist=0123456789.
 
   bg_color: # 颜色相关的RGB值
     - 2

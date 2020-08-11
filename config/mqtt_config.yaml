@@ -1,0 +1,15 @@
+client:
+  username: root
+  password: root1234
+  topic_prefix: equipment/parameter/
+  ipaddr: 10.233.5.52
+#  ipaddr: 127.0.0.1
+  port: 1883
+  keepalive: 600
+
+equipment:
+  hlh: # 回流焊
+    id: !!str 273
+
+task:
+  interval: 5 # 秒间隔
