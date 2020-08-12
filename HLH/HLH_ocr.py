@@ -1,9 +1,9 @@
 import json
 import collections
 import logging
-
-import pytesseract
-from PIL import ImageGrab
+# https://github.com/madmaze/pytesseract
+from PIL import ImageGrab, Image
+from pytesseract import image_to_string
 
 from Utils.config_util import load_config
 
@@ -61,7 +61,7 @@ class ParameterOCR:
         self.__process_img(pixels, image)
         if show_image:
             image.show()
-        return pytesseract.image_to_string(image, lang='eng', config=config)
+        return image_to_string(image, lang='eng', config=config)
 
     def get_parameters(self, start_pos, box_size, count=1):
         """

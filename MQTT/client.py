@@ -26,7 +26,12 @@ class MQTTClient:
         self.client.on_connect = on_connect
         self.client.on_message = on_message
         self.client.username_pw_set(self.username, self.password)
-        self.client.connect(host=self.ipaddr, port=self.port, keepalive=self.keep_alive)  # 600为keepalive的时间间隔
+        try:
+            self.client.connect(host=self.ipaddr, port=self.port, keepalive=self.keep_alive)  # 600为keepalive的时间间隔
+        except TimeoutError:
+            logging.error(f'连接失败 @ {self.ipaddr}:{self.port}', exc_info=True)
+        except Exception:
+            logging.error('网络连接错误', exc_info=True)
 
     def publish(self, topic, payload, qos=0):
         self.client.publish(topic=topic, payload=payload, qos=qos)

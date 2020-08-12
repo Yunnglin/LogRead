@@ -14,3 +14,5 @@ print('bundle dir is', bundle_dir)
 print('sys.argv[0] is', sys.argv[0])
 print('sys.executable is', sys.executable)
 print('os.getcwd is', os.getcwd())
+
+sys.exit(0)

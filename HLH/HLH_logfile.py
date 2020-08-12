@@ -66,6 +66,7 @@ class Logfile(object):
         """
         base_path = self.config['base']
         log_path = os.path.join(base_path, self.config['log']['path'])
+        self.log = []
         # 用os.walk方法取得path路径下的文件夹路径，子文件夹名，所有文件名
         for _, _, filenames in os.walk(log_path):
             for f in filenames:
