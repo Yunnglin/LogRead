@@ -1,7 +1,9 @@
 import time
 
 from HLH.HLH_logfile import Logfile
-from HLH.HLH_ocr import ParameterOCR
+from HLH.HLH_ocr import ParameterOCR as HLHOCR
+from Printer.printer_log import PrinterLog
+from Printer.printer_ocr import ParameterOCR as PrinterOCR
 from MQTT.client import MQTTClient
 import logging
 import json
@@ -9,15 +11,23 @@ import json
 from Utils.config_util import load_config
 
 
-class HLHTask:
-    def __init__(self, hlh_config_path, mqtt_config_path):
-        # 读取log file
-        self.log_file = Logfile(hlh_config_path)
-        # 识别屏幕参数
-        self.param = ParameterOCR(hlh_config_path)
+class Task:
+    def __init__(self, task_id, file_config_path, mqtt_config_path):
         # 发送mqtt消息
         self.client = MQTTClient(mqtt_config_path)
         self.mqtt_cfg = load_config(mqtt_config_path)
+
+        # 根据task id进行初始化
+        if task_id == 0:
+            # 读取log file
+            self.log_file = Logfile(file_config_path)
+            # 识别屏幕参数
+            self.param = HLHOCR(file_config_path)
+            self.equipment_id = self.mqtt_cfg['equipment']['hlh']['id']
+        elif task_id == 1:
+            self.log_file = PrinterLog(file_config_path)
+            self.param = PrinterOCR(file_config_path)
+            self.equipment_id = self.mqtt_cfg['equipment']['printer']['id']
         self.client.setup()
         self.payload = {
             'log': [],
@@ -27,12 +37,12 @@ class HLHTask:
     def exec_task(self):
         indent = self.mqtt_cfg['task']['out_indent']
         interval = self.mqtt_cfg['task']['interval']
-        equipment_id = self.mqtt_cfg['equipment']['hlh']['id']
         while True:
             self.__read_log()
             self.__get_parm()
             msg = json.dumps(self.payload, ensure_ascii=False, indent=indent)
-            self.client.publish(self.client.topic_prefix + equipment_id, msg)
+            # print(msg)
+            self.client.publish(self.client.topic_prefix + self.equipment_id, msg)
             time.sleep(interval)
 
     def __read_log(self):

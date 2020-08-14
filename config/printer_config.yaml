@@ -1,0 +1,20 @@
+log:
+  path: D:\Printer\LOGFILE
+
+  valid_time: 1 # one month
+
+  encode: utf-8
+
+  filter: true # 是否对字段进行筛选
+
+  fields:
+    - Emergency-stop On
+    - Open the PRINTER system,Screen resolution:1360 * 768
+    - Machine finished going home position
+    - Clean paper ERROR
+    - Quit the PRINTER system
+
+ocr_config:
+  show_img: false
+  num_config: --psm 6 -c tessedit_char_whitelist=0123456789.
+  chi_sim_config: --psm 6 # 语言为简中

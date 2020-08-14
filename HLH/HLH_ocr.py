@@ -2,7 +2,7 @@ import json
 import collections
 import logging
 # https://github.com/madmaze/pytesseract
-from PIL import ImageGrab, Image
+from PIL import ImageGrab
 from pytesseract import image_to_string
 
 from Utils.config_util import load_config
