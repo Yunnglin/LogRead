@@ -1,10 +1,41 @@
+from MQTT.client import MQTTClient
+from Utils.img_util import base64_to_image
 from Utils.log_util import setup_logging
 from Utils.config_util import load_config
-from task import Task
-
+from HLH.HLH_ocr import ParameterOCR as HLHOCR
+from Printer.printer_ocr import ParameterOCR as PrinterOCR
+from flask import Flask, request
 import os
 import logging
 import json
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello():
+    return 'hello'
+
+
+@app.route('/equipment/<e_id>', methods=['POST'])
+def process_data(e_id):
+    _json = json.loads(request.json)
+    payload = {'log': _json.get('log'), 'dynamic_param': {}}
+    raw_img = _json.get('image')
+    ocr = None
+    if e_id == mqtt_cfg['equipment']['hlh']['id']:
+        ocr = HLHOCR(hlh_path)
+    elif e_id == mqtt_cfg['equipment']['printer']['id']:
+        ocr = PrinterOCR(printer_path)
+    # 将接收到的base64的图像再转为图像
+    ocr.image = base64_to_image(raw_img)
+    ocr.identify()
+    payload['dynamic_param'] = ocr.dump_dict()
+
+    msg = json.dumps(payload, ensure_ascii=False, indent=None)
+    client.publish(client.topic_prefix + e_id, msg)
+    return ""
+
 
 if __name__ == '__main__':
     print('------program start------')
@@ -27,14 +58,8 @@ if __name__ == '__main__':
     # 配置任务
     mqtt_cfg = load_config(mqtt_path)
     logging.info('Loading Task Configuration：' + json.dumps(load_config(mqtt_path), indent=2))
-    task_id = mqtt_cfg['task']['identifier']
-    if task_id == 0:
-        # 在回流焊上运行
-        logging.info('Executing on Reflow Soldering Machine')
-        executor = Task(task_id, hlh_path, mqtt_path)
-        executor.exec_task()
-    elif task_id == 1:
-        # 在回流焊上运行
-        logging.info('Executing on Printer')
-        executor = Task(task_id, printer_path, mqtt_path)
-        executor.exec_task()
+
+    client = MQTTClient(mqtt_config_path)
+    client.setup()
+
+    app.run(host='0.0.0.0', port=5000, debug=True)

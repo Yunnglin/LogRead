@@ -6,7 +6,7 @@ from PIL import ImageGrab
 from pytesseract import image_to_string
 
 from Utils.config_util import load_config
-
+from Utils.img_util import get_image_from_path
 
 # tree = lambda: collections.defaultdict(tree)
 def tree():
@@ -34,13 +34,14 @@ class ParameterOCR:
         self.trans_speed_dict = {}
         self.frequency = 0
         self.frequency_dict = {}
+        self.image = None
 
-    def __process_img(self, pixels, image):
+    def __process_img(self, image):
         """
         处理图像，将图像转为黑白
-        :param pixels: 图像的像素
         :param image: 图像
         """
+        pixels = image.load()
         for i in range(image.size[0]):
             for j in range(image.size[1]):
                 if pixels[i, j] == (255, 0, 0):
@@ -57,8 +58,9 @@ class ParameterOCR:
         :param config: pytesseract的参数
         :return: 识别出的参数
         """
-        pixels = image.load()
-        self.__process_img(pixels, image)
+        if image.mode == 'RGBA':
+            image = image.convert('RGB')
+        self.__process_img(image)
         if show_image:
             image.show()
         return image_to_string(image, lang='eng', config=config)
@@ -73,7 +75,9 @@ class ParameterOCR:
         """
         offset_x = self.config['offset_x']
         full_screen = tuple(self.config['full_screen'])
-        screen = ImageGrab.grab(full_screen)
+        # screen = ImageGrab.grab(full_screen)
+        # screen = get_image_from_path('./OCRTest/resource/screen1366_768.PNG')
+        screen = self.image
         for pos in start_pos:
             for i in range(count):
                 new_start = (pos[0] + i * offset_x, pos[1])

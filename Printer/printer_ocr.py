@@ -34,6 +34,7 @@ class ParameterOCR:
         self.chi_sim_config = self.config['chi_sim_config']
         self.boxes = []
         self.__get_boxes()
+        self.image = None
         self.parameters = []
         self.parameters_dict = {
             '生产模式': '',
@@ -106,7 +107,8 @@ class ParameterOCR:
 
     def get_parameters(self, boxes: [Box]):
         full_screen = (0, 0, 1366, 768)
-        screen = ImageGrab.grab(full_screen)
+        # screen = ImageGrab.grab(full_screen)
+        screen = self.image
         index = 1
         for box in boxes:
             # 截取图像

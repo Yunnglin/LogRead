@@ -8,12 +8,20 @@ client:
   keepalive: 600
 
 equipment:
+  outer_pc: # 连接外网的pc
+    ipaddr: 192.168.102.164:5000
   hlh: # 回流焊
     id: !!str 610
+    ipaddr: 192.168.0.2
   printer: # 打印机
     id: !!str 608
+    ipaddr: 192.168.0.3
 
 task:
-  identifier: 1 # 表示当前运行的设备 0：回流焊 1：打印机
+  single_task: true # true表示在端系统上运行, 回流焊\印刷机
+  identifier: 0 # 表示当前运行的设备 0：回流焊 1：打印机
   interval: 5 # 秒间隔
   out_indent: null # 输出格式
+  screen_size:
+    - 1366
+    - 768

@@ -1,0 +1,1 @@
+pyinstaller "run_single.spec" --distpath="./out/dist" --workpath="./out/build"
