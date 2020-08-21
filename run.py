@@ -34,7 +34,8 @@ def process_data(e_id):
 
     msg = json.dumps(payload, ensure_ascii=False, indent=None)
     client.publish(client.topic_prefix + e_id, msg)
-    return ""
+    print(json.dumps(payload['dynamic_param'], ensure_ascii=False, indent=None))
+    return " "
 
 
 if __name__ == '__main__':

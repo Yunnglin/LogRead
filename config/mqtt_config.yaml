@@ -19,7 +19,7 @@ equipment:
 
 task:
   single_task: true # true表示在端系统上运行, 回流焊\印刷机
-  identifier: 0 # 表示当前运行的设备 0：回流焊 1：打印机
+  identifier: 1 # 表示当前运行的设备 0：回流焊 1：打印机
   interval: 5 # 秒间隔
   out_indent: null # 输出格式
   screen_size:

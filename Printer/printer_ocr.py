@@ -70,10 +70,12 @@ class ParameterOCR:
             '下轮清洗': '',
             '生产周期': '',
             '产量': '',
-
+            '刮刀片使用次数1': '',
+            '刮刀片使用次数2': ''
         }
 
     def __get_boxes(self):
+        # 第一列
         boxes1 = [
             Box(125, 370, 50, 25, False),
             Box(125, 395, 50, 25),
@@ -83,6 +85,7 @@ class ParameterOCR:
             Box(125, 395 + 100, 50, 25),
             Box(25, 565, 300, 50, False)
         ]
+        # 第二列
         boxes2 = [
             Box(455, 320, 50, 25),
             Box(455, 320 + 25, 50, 25),
@@ -92,7 +95,7 @@ class ParameterOCR:
             Box(455, 320 + 125, 130, 25, False),
             Box(455, 320 + 150, 60, 25, False),
         ]
-
+        # 第三列
         boxes3 = []
         origin = (760, 18)
         chi_index = [8, 10, 14, 15, 16]
@@ -101,9 +104,17 @@ class ParameterOCR:
                 boxes3.append(Box(origin[0], origin[1] + i * 25, 100, 25, False))
                 continue
             boxes3.append(Box(origin[0], origin[1] + i * 25, 50, 25))
+
+        # 刮刀片
+        boxes4 = [
+            Box(480, 515, 58, 16),
+            Box(561, 515, 58, 16)
+
+        ]
         self.boxes.extend(boxes1)
         self.boxes.extend(boxes2)
         self.boxes.extend(boxes3)
+        self.boxes.extend(boxes4)
 
     def get_parameters(self, boxes: [Box]):
         full_screen = (0, 0, 1366, 768)
@@ -151,5 +162,3 @@ class ParameterOCR:
     def dump_json(self):
         self.dump_dict()
         return json.dumps(self.parameters_dict, ensure_ascii=False, indent=2)
-
-

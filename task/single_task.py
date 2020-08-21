@@ -1,7 +1,7 @@
 import time
 from HLH.HLH_logfile import Logfile
 from Printer.printer_log import PrinterLog
-from PIL import ImageGrab
+from PIL import ImageGrab,Image
 import logging
 import json
 from requests import post
@@ -36,6 +36,7 @@ class SingleTask:
             msg = json.dumps(self.payload, ensure_ascii=False, indent=indent)
             # 发送屏幕截图和解析好的日志到外围机器
             self.request(msg)
+
             time.sleep(interval)
 
     def __read_log(self):
@@ -49,9 +50,10 @@ class SingleTask:
 
     def __get_screen(self):
         logging.info('Collecting Screen image...')
-        image = ImageGrab.grab((0, 0,
-                                self.mqtt_cfg['task']['screen_size'][0],
-                                self.mqtt_cfg['task']['screen_size'][1]))
+        # image = ImageGrab.grab((0, 0,
+        #                         self.mqtt_cfg['task']['screen_size'][0],
+        #                         self.mqtt_cfg['task']['screen_size'][1]))
+        image = Image.open("./OCRTest/resource/printer.png")
         try:
             self.payload['image'] = image_to_base64(image)
         except Exception:
