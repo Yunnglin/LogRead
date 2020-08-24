@@ -70,8 +70,8 @@ class ParameterOCR:
             '下轮清洗': '',
             '生产周期': '',
             '产量': '',
-            '刮刀片使用次数1': '',
-            '刮刀片使用次数2': ''
+            # '刮刀片使用次数1': '',
+            # '刮刀片使用次数2': ''
         }
 
     def __get_boxes(self):
@@ -114,7 +114,7 @@ class ParameterOCR:
         self.boxes.extend(boxes1)
         self.boxes.extend(boxes2)
         self.boxes.extend(boxes3)
-        self.boxes.extend(boxes4)
+        # self.boxes.extend(boxes4)
 
     def get_parameters(self, boxes: [Box]):
         full_screen = (0, 0, 1366, 768)

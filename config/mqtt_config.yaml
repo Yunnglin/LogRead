@@ -2,9 +2,9 @@ client:
   username: root
   password: root1234
   topic_prefix: equipment/parameter/
-  ipaddr: 10.233.5.52
+  ipaddr: yunmotec.com
 #  ipaddr: 127.0.0.1
-  port: 1883
+  port: 16885
   keepalive: 600
 
 equipment:
@@ -19,6 +19,7 @@ equipment:
 
 task:
   single_task: true # true表示在端系统上运行, 回流焊\印刷机
+  show_info: true # 是否显示收到的信息
   identifier: 1 # 表示当前运行的设备 0：回流焊 1：打印机
   interval: 5 # 秒间隔
   out_indent: null # 输出格式

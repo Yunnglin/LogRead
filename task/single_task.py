@@ -35,8 +35,10 @@ class SingleTask:
             self.__get_screen()
             msg = json.dumps(self.payload, ensure_ascii=False, indent=indent)
             # 发送屏幕截图和解析好的日志到外围机器
-            self.request(msg)
-
+            try:
+                self.request(msg)
+            except Exception:
+                logging.exception("连接服务器出错!!!")
             time.sleep(interval)
 
     def __read_log(self):
@@ -50,10 +52,10 @@ class SingleTask:
 
     def __get_screen(self):
         logging.info('Collecting Screen image...')
-        # image = ImageGrab.grab((0, 0,
-        #                         self.mqtt_cfg['task']['screen_size'][0],
-        #                         self.mqtt_cfg['task']['screen_size'][1]))
-        image = Image.open("./OCRTest/resource/printer.png")
+        image = ImageGrab.grab((0, 0,
+                                self.mqtt_cfg['task']['screen_size'][0],
+                                self.mqtt_cfg['task']['screen_size'][1]))
+        # image = Image.open("./OCRTest/resource/printer.png")
         try:
             self.payload['image'] = image_to_base64(image)
         except Exception:

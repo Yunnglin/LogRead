@@ -34,8 +34,9 @@ def process_data(e_id):
 
     msg = json.dumps(payload, ensure_ascii=False, indent=None)
     client.publish(client.topic_prefix + e_id, msg)
-    print(json.dumps(payload['dynamic_param'], ensure_ascii=False, indent=None))
-    return " "
+    if mqtt_cfg['task']['show_info']:
+        print(json.dumps(payload['dynamic_param'], ensure_ascii=False, indent=None))
+    return ""
 
 
 if __name__ == '__main__':
@@ -63,4 +64,4 @@ if __name__ == '__main__':
     client = MQTTClient(mqtt_config_path)
     client.setup()
 
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
