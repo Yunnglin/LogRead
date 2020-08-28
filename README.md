@@ -57,6 +57,9 @@ config文件中的参数设置参考 [tesseract文档](https://github.com/tesser
 配置大致同上
 
 ## 使用
+
+按如下方式build或者直接下载 [release](https://github.com/Yunnglin/LogRead/releases/tag/v1.0)
+
 **注意:** 打包环境需要是32位才能在32位机器上运行
 
 ```shell script
