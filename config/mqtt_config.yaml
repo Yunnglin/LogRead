@@ -9,7 +9,7 @@ client:
 
 equipment:
   outer_pc: # 连接外网的pc
-    ipaddr: 192.168.102.164:5000
+    ipaddr: 192.168.0.1:5000
   hlh: # 回流焊
     id: !!str 610
     ipaddr: 192.168.0.2
